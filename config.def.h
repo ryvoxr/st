@@ -5,7 +5,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Liberation Mono:size=12";
+static char *font = "Liberation Mono:pixelsize=14:antialias=true:autohint=true";
 static int borderpx = 2;
 
 /*
@@ -94,58 +94,53 @@ char *termname = "st-256color";
 unsigned int tabspaces = 8;
 
 /* bg opacity */
-float alpha = 0.85;
+float alpha = 0.8;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
 	/* 8 normal colors */
- 	/* [0] = "#282828", /* hard contrast: #1d2021 / soft contrast: #32302f */
- 	[0] = "#000000", /* black */
- 	[1] = "#cc241d", /* red     */
- 	[2] = "#98971a", /* green   */
- 	[3] = "#d79921", /* yellow  */
- 	[4] = "#458588", /* blue    */
- 	[5] = "#b16286", /* magenta */
- 	[6] = "#689d6a", /* cyan    */
- 	[7] = "#a89984", /* white   */
+	"#45475A",
+	"#F38BA8",
+	"#A6E3A1",
+	"#F9E2AF",
+	"#89B4FA",
+	"#F5C2E7",
+	"#94E2D5",
+	"#BAC2DE",
 
 	/* 8 bright colors */
- 	[8]  = "#928374", /* black   */
- 	[9]  = "#fb4934", /* red     */
- 	[10] = "#b8bb26", /* green   */
- 	[11] = "#fabd2f", /* yellow  */
- 	[12] = "#83a598", /* blue    */
- 	[13] = "#d3869b", /* magenta */
- 	[14] = "#8ec07c", /* cyan    */
- 	[15] = "#ebdbb2", /* white   */
+	"#585B70",
+	"#F38BA8",
+	"#A6E3A1",
+	"#F9E2AF",
+	"#89B4FA",
+	"#F5C2E7",
+	"#94E2D5",
+	"#A6ADC8",
+
+[256] = "#CDD6F4", /* default foreground colour */
+[257] = "#504945", /* default background colour */
+[258] = "#F5E0DC", /*575268*/
+
 };
 
 
 /*
- * Default colors (colorname index)
  * foreground, background, cursor, reverse cursor
  */
-unsigned int defaultfg = 15;
-unsigned int defaultbg = 0;
-unsigned int defaultcs = 15;
-static unsigned int defaultrcs = 257;
+unsigned int defaultfg = 256;
+unsigned int defaultbg = 257;
+unsigned int defaultcs = 258;
+static unsigned int defaultrcs = 258;
 
 /*
- * https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h4-Functions-using-CSI-_-ordered-by-the-final-character-lparen-s-rparen:CSI-Ps-SP-q.1D81
- * Default style of cursor
- * 0: blinking block
- * 1: blinking block (default)
- * 2: steady block ("█")
- * 3: blinking underline
- * 4: steady underline ("_")
- * 5: blinking bar
- * 6: steady bar ("|")
- * 7: blinking st cursor
- * 8: steady st cursor
+ * Default shape of cursor
+ * 2: Block ("█")
+ * 4: Underline ("_")
+ * 6: Bar ("|")
+ * 7: Snowman ("☃")
  */
-
-static unsigned int cursorstyle = 1;
-static Rune stcursor = 0x2603; /* snowman ("☃") */
+static unsigned int cursorshape = 2;
 
 /*
  * Default columns and rows numbers
@@ -166,13 +161,13 @@ static unsigned int mousebg = 0;
  * doesn't match the ones requested.
  */
 static unsigned int defaultattr = 11;
+
 /*
  * Force mouse select/shortcuts while mask is active (when MODE_MOUSE is set).
  * Note that if you want to use ShiftMask with selmasks, set this to an other
  * modifier, set to 0 to not use it.
  */
 static uint forcemousemod = ShiftMask;
-
 
 /*
  * Internal mouse shortcuts.
@@ -205,8 +200,10 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
 	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
-	{ TERMMOD,              XK_K,           kscrollup,      {.i = +1} },
-	{ TERMMOD,              XK_J,           kscrolldown,    {.i = -1} },
+	{ ControlMask,          XK_k,           kscrollup,      {.i =  1} },
+	{ ControlMask,          XK_j,           kscrolldown,    {.i =  1} },
+    { ControlMask|ShiftMask,XK_k,           kscrollup,      {.i = -1} },
+    { ControlMask|ShiftMask,XK_j,           kscrolldown,    {.i = -1} },
 };
 
 /*

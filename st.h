@@ -19,6 +19,7 @@
 
 #define TRUECOLOR(r,g,b)	(1 << 24 | (r) << 16 | (g) << 8 | (b))
 #define IS_TRUECOL(x)		(1 << 24 & (x))
+#define HISTSIZE            2000
 
 enum glyph_attribute {
 	ATTR_NULL       = 0,
@@ -81,14 +82,13 @@ void die(const char *, ...);
 void redraw(void);
 void draw(void);
 
-void kscrolldown(const Arg *);
-void kscrollup(const Arg *);
 void printscreen(const Arg *);
 void printsel(const Arg *);
 void sendbreak(const Arg *);
 void toggleprinter(const Arg *);
 
 int tattrset(int);
+int tisaltscr(void);
 void tnew(int, int);
 void tresize(int, int);
 void tsetdirtattr(int);
@@ -126,4 +126,3 @@ extern unsigned int tabspaces;
 extern unsigned int defaultfg;
 extern unsigned int defaultbg;
 extern unsigned int defaultcs;
-extern float alpha;
